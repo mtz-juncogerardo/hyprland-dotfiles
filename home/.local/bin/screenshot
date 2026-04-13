@@ -1,0 +1,7 @@
+#!/bin/bash
+# Take screenshot and fix HDR washed-out colors
+
+exec &>/tmp/screenshot.log
+set -x
+
+grim -g "$(slurp)" - | magick png:- -colorspace sRGB -depth 8 png:- | swappy -f -

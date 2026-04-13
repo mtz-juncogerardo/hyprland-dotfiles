@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# theme-selector — rofi-based theme picker
+# Reads available themes, shows them in rofi, applies the selection
+
+set -euo pipefail
+
+THEMES_DIR="$HOME/.config/themes/colors"
+CURRENT_FILE="$HOME/.config/themes/current"
+CURRENT=$(cat "$CURRENT_FILE" 2>/dev/null || echo "catppuccin-mocha")
+
+# Build slug-indexed arrays
+declare -a slugs=()
+declare -a names=()
+options=""
+
+for f in "$THEMES_DIR"/*.sh; do
+    slug=$(basename "$f" .sh)
+    name=$(grep '^THEME_NAME=' "$f" | head -1 | cut -d'"' -f2)
+    slugs+=("$slug")
+    names+=("$name")
+    if [[ "$slug" == "$CURRENT" ]]; then
+        options+="${name} (active)\n"
+    else
+        options+="${name}\n"
+    fi
+done
+
+# Show rofi
+chosen=$(echo -en "$options" | rofi -dmenu -i \
+    -p "Theme" \
+    -mesg "Current: $CURRENT" \
+    -theme theme-current \
+    -no-custom) || exit 0
+
+[[ -z "$chosen" ]] && exit 0
+
+# Strip (active) suffix and trim
+chosen_name=$(echo "$chosen" | sed 's/ (active)$//;s/^[[:space:]]*//;s/[[:space:]]*$//')
+
+# Find the matching slug
+for i in "${!names[@]}"; do
+    if [[ "${names[$i]}" == "$chosen_name" ]]; then
+        exec /home/lynx/.local/bin/theme-apply "${slugs[$i]}"
+    fi
+done
+
+notify-send -t 3000 "Theme Switcher" "Theme not found: $chosen_name" 2>/dev/null
+exit 1

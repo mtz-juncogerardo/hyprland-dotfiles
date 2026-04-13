@@ -1,0 +1,32 @@
+#!/bin/sh
+
+shutdown="󰐥  Shutdown"
+reboot="󰜉  Reboot"
+logout="󰍃  Logout"
+
+# Watcher: dismiss rofi when focus moves away from it.
+# Needs -normal-window below so rofi appears as a real toplevel
+# (layer-shell surfaces don't surface focus events to Hyprland).
+(
+    saw_rofi=0
+    for _ in $(seq 1 600); do
+        sleep 0.1
+        cls=$(hyprctl activewindow -j 2>/dev/null | jq -r '.class // empty')
+        if [ "$cls" = "Rofi" ]; then
+            saw_rofi=1
+            continue
+        fi
+        [ "$saw_rofi" = "1" ] || continue
+        pkill -x rofi 2>/dev/null
+        break
+    done
+) &
+
+chosen=$(printf '%s\n%s\n%s\n' "$shutdown" "$reboot" "$logout" \
+    | rofi -dmenu -p "" -normal-window -theme ~/.config/rofi/powermenu.rasi)
+
+case "$chosen" in
+    "$shutdown") systemctl poweroff ;;
+    "$reboot")   systemctl reboot ;;
+    "$logout")   hyprctl dispatch exit ;;
+esac

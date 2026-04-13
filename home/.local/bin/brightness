@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# Brightness control with dunst OSD notification (wl-gammarelay-rs)
+# Usage: brightness up | down | restore
+
+STEP=0.05
+NOTIFY_ID=2594 # fixed ID so notifications replace each other
+DBUS_DEST="rs.wl-gammarelay"
+DBUS_PATH="/"
+DBUS_IFACE="rs.wl.gammarelay"
+STATE_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/brightness"
+DEFAULT_BRIGHTNESS=0.75
+
+get_brightness() {
+    busctl --user get-property "$DBUS_DEST" "$DBUS_PATH" "$DBUS_IFACE" Brightness \
+        | awk '{printf "%.0f", $2 * 100}'
+}
+
+get_brightness_raw() {
+    busctl --user get-property "$DBUS_DEST" "$DBUS_PATH" "$DBUS_IFACE" Brightness \
+        | awk '{print $2}'
+}
+
+set_brightness() {
+    busctl --user set-property "$DBUS_DEST" "$DBUS_PATH" "$DBUS_IFACE" Brightness d "$1"
+}
+
+update_brightness() {
+    busctl --user -- call "$DBUS_DEST" "$DBUS_PATH" "$DBUS_IFACE" UpdateBrightness d "$1"
+}
+
+save_state() {
+    mkdir -p "$(dirname "$STATE_FILE")"
+    get_brightness_raw > "$STATE_FILE"
+}
+
+send_notification() {
+    local val="$1"
+    local icon
+
+    icon="display-brightness-symbolic"
+
+    dunstify -a "brightness" -u low -r "$NOTIFY_ID" -i "$icon" \
+        -h string:x-dunst-stack-tag:brightness -h int:value:"$val" \
+        "Brightness: ${val}%"
+}
+
+case "$1" in
+    up)
+        update_brightness "$STEP"
+        pkill -RTMIN+8 waybar 2>/dev/null
+        save_state
+        send_notification "$(get_brightness)"
+        ;;
+    down)
+        update_brightness "-$STEP"
+        pkill -RTMIN+8 waybar 2>/dev/null
+        save_state
+        send_notification "$(get_brightness)"
+        ;;
+    restore)
+        # Wait for wl-gammarelay-rs to register on the session bus
+        for _ in $(seq 1 25); do
+            busctl --user get-property "$DBUS_DEST" "$DBUS_PATH" "$DBUS_IFACE" Brightness &>/dev/null && break
+            sleep 0.2
+        done
+        target="$DEFAULT_BRIGHTNESS"
+        if [ -r "$STATE_FILE" ]; then
+            saved=$(cat "$STATE_FILE")
+            [ -n "$saved" ] && target="$saved"
+        fi
+        set_brightness "$target"
+        pkill -RTMIN+8 waybar 2>/dev/null
+        ;;
+    *)
+        echo "Usage: brightness up|down|restore"
+        exit 1
+        ;;
+esac

@@ -1,0 +1,2 @@
+#!/bin/sh
+pgrep -x gsimplecal >/dev/null && pkill -x gsimplecal || gsimplecal

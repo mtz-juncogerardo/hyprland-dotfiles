@@ -1,0 +1,91 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 38,
+    "margin-top": 6,
+    "margin-left": 10,
+    "margin-right": 10,
+    "modules-left": [
+        "custom/arch",
+        "clock",
+        "tray"
+    ],
+    "modules-center": [
+        "hyprland/workspaces"
+    ],
+    "modules-right": [
+        "network",
+        "pulseaudio",
+        "custom/brightness",
+        "memory",
+        "temperature"
+    ],
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            "active": "",
+            "default": "",
+            "empty": ""
+        },
+        "persistent-workspaces": {
+            "*": 5
+        }
+    },
+    "clock": {
+        "locale": "C",
+        "format": "  {:%H:%M   %A %d %B %Y}",
+        "tooltip-format": "{:%A, %d de %B %Y}",
+        "on-click": "/home/lynx/.local/bin/toggle-calendar"
+    },
+    "custom/arch": {
+        "format": "󰣇",
+        "tooltip": false,
+        "on-click": "/home/lynx/.local/bin/powermenu"
+    },
+    "memory": {
+        "format": "󰕳 {percentage}%",
+        "tooltip-format": "{used:0.1f}G / {total:0.1f}G"
+    },
+    "temperature": {
+        "hwmon-path-abs": "/sys/devices/platform/coretemp.0/hwmon",
+        "input-filename": "temp1_input",
+        "format": " {temperatureC}°C",
+        "critical-threshold": 80
+    },
+    "tray": {
+        "icon-size": 18,
+        "spacing": 8
+    },
+    "custom/brightness": {
+        "format": "󰃠 {}",
+        "exec": "busctl --user get-property rs.wl-gammarelay / rs.wl.gammarelay Brightness | awk '{printf \"%.0f%%\", $2*100}'",
+        "interval": "once",
+        "signal": 8
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰖁 muted",
+        "format-icons": {
+            "default": [
+                "󰕿",
+                "󰖀",
+                "󰕾"
+            ]
+        },
+        "scroll-step": 5,
+        "on-click": "pavucontrol"
+    },
+    "network": {
+        "format-wifi": "{icon}  {signalStrength}%",
+        "format-ethernet": "",
+        "format-disconnected": "󰤭  offline",
+        "tooltip-format": "{ipaddr}",
+        "format-icons": [
+            "󰤯",
+            "󰤟",
+            "󰤢",
+            "󰤥",
+            "󰤨"
+        ]
+    }
+}

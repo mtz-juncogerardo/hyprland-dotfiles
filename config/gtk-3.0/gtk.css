@@ -1,0 +1,41 @@
+/* Nord-themed GtkCalendar (used by gsimplecal) */
+
+calendar {
+  background-color: #2e3440;
+  color: #eceff4;
+  border: 2px solid #88c0d0;
+  border-radius: 12px;
+  padding: 8px;
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 12px;
+}
+
+calendar:selected {
+  background-color: #88c0d0;
+  color: #2e3440;
+  border-radius: 6px;
+}
+
+calendar.header {
+  color: #88c0d0;
+  font-weight: bold;
+  border-bottom: 1px solid #434c5e;
+}
+
+calendar.button {
+  color: #88c0d0;
+  background: transparent;
+}
+
+calendar.button:hover {
+  color: #b48ead;
+}
+
+calendar.highlight {
+  color: #b48ead;
+  font-weight: bold;
+}
+
+calendar:indeterminate {
+  color: #616e88;
+}

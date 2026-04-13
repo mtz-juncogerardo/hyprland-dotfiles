@@ -1,0 +1,64 @@
+/* ==========================================================================
+   Power menu — Nord theme, anchored below waybar left section
+   ========================================================================== */
+
+* {
+    nord-bg:      rgba(36, 41, 51, 0.95);
+    nord-border:  #81a1c1;
+    nord-fg:      #eceff4;
+    nord-muted:   #6d7a96;
+    nord-accent:  #88c0d0;
+    nord-sel-bg:  rgba(129, 161, 193, 0.20);
+
+    font: "JetBrainsMono Nerd Font 11";
+
+    background-color: transparent;
+    text-color:       @nord-fg;
+    margin:           0;
+    padding:          0;
+    spacing:          0;
+}
+
+window {
+    location:         north west;
+    anchor:           north west;
+    x-offset:         10px;
+    y-offset:         0px;
+    width:            200px;
+    border:           2px;
+    border-color:     @nord-border;
+    border-radius:    10px;
+    background-color: @nord-bg;
+    padding:          6px;
+}
+
+mainbox {
+    children: [ listview ];
+}
+
+listview {
+    lines:            3;
+    columns:          1;
+    fixed-height:     true;
+    background-color: transparent;
+    spacing:          2px;
+}
+
+element {
+    padding:          10px 14px;
+    spacing:          12px;
+    border-radius:    6px;
+    background-color: transparent;
+    children:         [ element-text ];
+}
+
+element-text {
+    text-color:     @nord-fg;
+    vertical-align: 0.5;
+    horizontal-align: 0;
+}
+
+element selected {
+    background-color: @nord-sel-bg;
+    text-color:       @nord-accent;
+}

@@ -1,0 +1,62 @@
+# Gruvbox Dark
+THEME_NAME="Gruvbox Dark"
+THEME_SLUG="gruvbox-dark"
+
+# Base
+BG="#282828"
+BG_DIM="#1d2021"
+BG_DARK="#1d2021"
+SURFACE0="#3c3836"
+SURFACE1="#504945"
+SURFACE2="#665c54"
+
+# Text
+FG="#ebdbb2"
+FG_DIM="#d5c4a1"
+FG_MUTED="#bdae93"
+OVERLAY0="#7c6f64"
+OVERLAY1="#928374"
+OVERLAY2="#a89984"
+
+# Accents
+ACCENT="#83a598"
+ACCENT2="#d3869b"
+ROSEWATER="#d5c4a1"
+FLAMINGO="#d65d0e"
+PINK="#d3869b"
+MAUVE="#d3869b"
+RED="#fb4934"
+MAROON="#cc241d"
+PEACH="#fe8019"
+YELLOW="#fabd2f"
+GREEN="#b8bb26"
+TEAL="#8ec07c"
+SKY="#83a598"
+SAPPHIRE="#076678"
+BLUE="#83a598"
+LAVENDER="#b8bb26"
+
+# Terminal 16 colors
+COLOR0="#282828"
+COLOR1="#cc241d"
+COLOR2="#98971a"
+COLOR3="#d79921"
+COLOR4="#458588"
+COLOR5="#b16286"
+COLOR6="#689d6a"
+COLOR7="#a89984"
+COLOR8="#928374"
+COLOR9="#fb4934"
+COLOR10="#b8bb26"
+COLOR11="#fabd2f"
+COLOR12="#83a598"
+COLOR13="#d3869b"
+COLOR14="#8ec07c"
+COLOR15="#ebdbb2"
+
+# Neovim
+NVIM_COLORSCHEME="gruvbox"
+NVIM_PLUGIN="ellisonleao/gruvbox.nvim"
+NVIM_SETUP='require("gruvbox").setup(opts)'
+NVIM_FLAVOUR='contrast = "hard",'
+NVIM_LUALINE="gruvbox-material"

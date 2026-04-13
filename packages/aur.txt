@@ -1,0 +1,11 @@
+catppuccin-cursors-mocha
+catppuccin-gtk-theme-mocha
+insomnia
+nordzy-cursors
+onlyoffice-bin
+rider
+sddm-astronaut-theme
+visual-studio-code-bin
+webstorm
+webstorm-jre
+wl-gammarelay-rs
