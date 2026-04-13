@@ -5,7 +5,7 @@ Entorno Hyprland completo (Arch Linux): configs, paquetes, temas, scripts.
 ## Uso
 
 ```bash
-git clone <tu-repo> ~/repos/hyprland-dotfiles
+git clone https://github.com/mtz-juncogerardo/hyprland-dotfiles.git ~/repos/hyprland-dotfiles
 cd ~/repos/hyprland-dotfiles
 ./install.sh
 ```
