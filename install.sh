@@ -31,11 +31,38 @@ fi
 # ---------------------------------------------------------------------------
 # 2. Paquetes oficiales + AUR
 # ---------------------------------------------------------------------------
+# Habilita multilib si está comentado (necesario para lib32-* y steam)
+if grep -q '^\s*#\s*\[multilib\]' /etc/pacman.conf; then
+    msg "Habilitando repositorio multilib..."
+    sudo sed -i '/^\s*#\s*\[multilib\]/,/^\s*#\s*Include/ s/^\s*#\s*//' /etc/pacman.conf
+    sudo pacman -Sy --noconfirm
+fi
+
+# Filtra paquetes inexistentes para que pacman no aborte el script.
+filter_available() {
+    local repo_list aur_list
+    repo_list="$(pacman -Slq 2>/dev/null)"
+    while IFS= read -r pkg; do
+        [[ -z "$pkg" || "$pkg" =~ ^# ]] && continue
+        if grep -qx "$pkg" <<<"$repo_list"; then
+            printf '%s\n' "$pkg"
+        else
+            warn "paquete no encontrado en repos oficiales, se omite: $pkg"
+        fi
+    done < "$1"
+}
+
 msg "Instalando paquetes oficiales..."
-sudo pacman -S --needed --noconfirm - < "$REPO_DIR/packages/pacman.txt"
+mapfile -t official_pkgs < <(filter_available "$REPO_DIR/packages/pacman.txt")
+if (( ${#official_pkgs[@]} )); then
+    sudo pacman -S --needed --noconfirm "${official_pkgs[@]}" || warn "algunos paquetes oficiales fallaron"
+fi
 
 msg "Instalando paquetes AUR..."
-paru -S --needed --noconfirm - < "$REPO_DIR/packages/aur.txt"
+# paru maneja oficiales+AUR; usa xargs para no abortar si alguno falla.
+grep -vE '^\s*(#|$)' "$REPO_DIR/packages/aur.txt" \
+    | xargs -r paru -S --needed --noconfirm \
+    || warn "algunos paquetes AUR fallaron"
 
 # ---------------------------------------------------------------------------
 # 3. oh-my-zsh + plugins
